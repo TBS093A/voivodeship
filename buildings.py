@@ -5,16 +5,42 @@ class Player:
         self.playerName = name
         self.playerClan = clan
         self.gold = 250
-
-class City(Player):
     
-    def __init__(self, player):
+class Country(Player):
+
+    def __init__(self, name, player):
         super().__init__(
-            player.name, 
-            player.clan, 
+            player.playerName, 
+            player.playerClan, 
             player.gold
         )
+        self.countryName = name
+
+class Province(Player):
+
+    def __init__(self, name, country):
+        super().__init__(
+            country.playerName, 
+            country.playerClan, 
+            country.gold,
+            country.countryName
+        )
+        self.provinceName = name
         self.respect = 100
+
+class City(Province):
+    
+    def __init__(self, name, province):
+        super().__init__(
+            province.playerName, 
+            province.playerClan, 
+            province.gold,
+            province.countryName,
+            province.provinceName,
+            province.respect
+        )
+        self.cityName = name
+
 
 
 class Economy(City):
@@ -60,6 +86,19 @@ class Economy(City):
                 "crossbow": 0, 
                 "forge": 0, 
                 "armorer": 0 
+            },
+            "people": {
+                "small_houses": 0,
+                "medium_houses": 0,
+                "big_houses": 0,
+                # christian
+                "church": 0,        # on small settlement
+                "cathedral": 0,     # on cities
+                "basilica": 0,      # on province (city + settlements)
+                # slavic
+                "mound": 0,         # on small settlement
+                "peace_mound": 0,   # on cities
+                "war_mound": 0      # on province (city + settlements)
             },
             "military": { 
                 "barraks": 0,
