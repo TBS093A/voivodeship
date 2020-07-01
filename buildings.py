@@ -5,8 +5,10 @@ class Player:
         self.playerName = name
         self.playerClan = clan
         self.gold = 250
-    
+
 class Country(Player):
+
+    provinceTrades = []
 
     def __init__(self, name, player):
         super().__init__(
@@ -16,7 +18,19 @@ class Country(Player):
         )
         self.countryName = name
 
+    def setProvinceTrade(self, tradeImport, tradeExport, thing, value):
+        self.provinceTrades.append(
+            {
+                "thing": thing,
+                "value": value,
+                "province_import": tradeImport,
+                "province_export": tradeExport
+            }
+        )
+    
 class Province(Player):
+
+    citySettlementTrades = []
 
     def __init__(self, name, country):
         super().__init__(
@@ -27,6 +41,16 @@ class Province(Player):
         )
         self.provinceName = name
         self.respect = 100
+
+    def setCitySettlementTrade(self, city, settlement, thing, value):
+        self.citySettlementTrades.append(
+            {
+                "thing": thing,
+                "value": value,
+                "city": city,
+                "settlement": settlement
+            }
+        )
 
 class City(Province):
     
@@ -58,7 +82,8 @@ class Economy(City):
 
         self.buildings = {
             "general": { 
-                "keep": 1, 
+                "keep": 1,
+                "market": 0, 
                 "warehouse": 0, 
                 "granary": 0, 
                 "armory": 0 
@@ -70,6 +95,7 @@ class Economy(City):
             },
             "agriculture": { 
                 "apple_orchard": 0,
+                "fisherman": 0,
                 "grain_farm": 0, 
                 "hop_plantation": 0, 
                 "cow_farm": 0
