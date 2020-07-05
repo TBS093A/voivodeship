@@ -8,74 +8,27 @@ class Player:
 
 class Country(Player):
 
-    provinceTrades = []
-
     def __init__(self, name, player):
-        super().__init__(
-            player.playerName, 
-            player.playerClan, 
-            player.gold
-        )
+        self.player = player
         self.countryName = name
-
-    def setProvinceTrade(self, tradeImport, tradeExport, thing, value):
-        self.provinceTrades.append(
-            {
-                "thing": thing,
-                "value": value,
-                "province_import": tradeImport,
-                "province_export": tradeExport
-            }
-        )
     
-class Province(Player):
-
-    citySettlementTrades = []
+class Province(Country):
 
     def __init__(self, name, country):
-        super().__init__(
-            country.playerName, 
-            country.playerClan, 
-            country.gold,
-            country.countryName
-        )
+        self.country = country
         self.provinceName = name
         self.respect = 100
-
-    def setCitySettlementTrade(self, city, settlement, thing, value):
-        self.citySettlementTrades.append(
-            {
-                "thing": thing,
-                "value": value,
-                "city": city,
-                "settlement": settlement
-            }
-        )
 
 class City(Province):
     
     def __init__(self, name, province):
-        super().__init__(
-            province.playerName, 
-            province.playerClan, 
-            province.gold,
-            province.countryName,
-            province.provinceName,
-            province.respect
-        )
+        self.province = province
         self.cityName = name
 
-
-
-class Economy(City):
-
-    def __init__(self, city):
-        super().__init__(
-            city.respect
-        )
+        self.respect = 100
         self.people = 20
-        self.materials = { "wood": 20, "stone": 20, "iron" = 20 }
-        self.foodProcessed = { "flour": 0, "hop": 0 }
+        self.materials = { "wood": 20, "stone": 20, "iron": 20 }
+        self.foodProcessed = { "grain": 0, "flour": 0, "hop": 0 }
         self.food = { "apple": 20, "fish": 20, "chees": 20, "bread": 20 }
         self.weapon = { "spear": 0, "arch": 0, "crossbow": 0, "sword": 0, "plate_armor": 0 }
         self.entertainment = { "beer": 20 }
@@ -96,16 +49,16 @@ class Economy(City):
             "agriculture": { 
                 "apple_orchard": 0,
                 "fisherman": 0,
+                "cow_farm": 0,
                 "grain_farm": 0, 
-                "hop_plantation": 0, 
-                "cow_farm": 0
+                "hop_plantation": 0 
             },
             "food_processing": {
                 "mill": 0,
                 "barkery": 0,
                 "brawery": 0,
                 "inn": 0
-            }
+            },
             "workshops": { 
                 "archery": 0, 
                 "spearman": 0, 
@@ -137,14 +90,14 @@ class Economy(City):
                     "big_wood_tower": 0, 
                     "small_wood_gate": 0,
                     "big_wood_gate": 0
-                }
+                },
                 "stone_defense": {
                     "wall": 0,
                     "medium_stone_tower": 0,
                     "big_stone_tower": 0,
                     "small_stone_gate": 0,
                     "big_stone_gate": 0
-                }
+                },
                 "other": {
                     "moat": 0,
                     "barricade": 0
@@ -166,8 +119,8 @@ class Economy(City):
         self.workshopWorkers = 0
 
     def taxes(self):
-        self.gold += self.people * self.taxesLevel
-        self.respect -= level
+        self.province.country.player.gold += self.people * self.taxesLevel
+        self.respect -= self.taxesLevel
 
     def foodRations(self):
         eat = self.people * self.foodRationsLevel
@@ -202,62 +155,30 @@ class Economy(City):
                 self.respect += value / consumption
                 value = 0
 
-    def generalProduction(self):
-        for buildType, buildings in self.buildings
-            if buildType == "mine_raw_materials":
-                workers = self.mineWorkers
-            elif buildType == "agriculture":
-                workers = self.agricultureWorkers
-            elif buildType == "food_processing":
-                workers = self.foodProcessingWorkers
-            elif buildType == "workshops":
-                workers = self.workshopWorkers
-            for build, count in buildings:
+    # def generalProduction(self):
+    #     for buildType, buildings in self.buildings:
+    #         if buildType == "mine_raw_materials":
+    #             workers = self.mineWorkers
+    #         elif buildType == "agriculture":
+    #             workers = self.agricultureWorkers
+    #         elif buildType == "food_processing":
+    #             workers = self.foodProcessingWorkers
+    #         elif buildType == "workshops":
+    #             workers = self.workshopWorkers
+    #         for build, count in buildings:
 
     def mineProduction(self):
         for build, buildCount in self.buildings["mine_raw_materials"]:
             for mineral, value in self.materials:
                 value += (self.mineWorkers / buildCount) 
 
-    def farmProduction(self):
-        for build, buildCount in self.buildings["agriculture"]:
+    # def farmProduction(self):
+    #     for build, buildCount in self.buildings["agriculture"]:
             
 
-    def foodProduction(self):
-        for build, buildCount in self.buildings["food_processing"]:
+    # def foodProduction(self):
+    #     for build, buildCount in self.buildings["food_processing"]:
 
-    def workProduction(self):
-        for build, buildCount in self.buildings["workshops"]:
+    # def workProduction(self):
+    #     for build, buildCount in self.buildings["workshops"]:
 
-
-
-class Build:
-
-    def __init__(self, player):
-        self.name = "abstractBuild"
-        self.player = player
-        self.HP = 100
-        self.texture
-
-    def getInfo(self):
-        return f"Build name: {self.name}, HP: {self.HP}, player: {self.player}"
-
-    class Meta:
-        abstract = True
-
-class Wall(Build):
-
-    def __init__(self, player):
-        super().__init__(player)
-        self.name = "Stone Wall"
-        self.HP = 300
-        self.texture = pygame.image.load('wall.png').convert_alpha()
-
-class House(Build):
-
-    def __init__(self, player):
-        super().__init__(player, HP)
-        self.name = "House"
-        self.texture = pygame.image.load('house.png').convert_alpha()
-
-    def createPeople()
