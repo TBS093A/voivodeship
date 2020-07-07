@@ -1,23 +1,4 @@
-
-class Player:
-
-    def __init__(self, name, clan=-1):
-        self.playerName = name
-        self.playerClan = clan
-        self.gold = 250
-
-class Country(Player):
-
-    def __init__(self, name, player):
-        self.player = player
-        self.countryName = name
-    
-class Province(Country):
-
-    def __init__(self, name, country):
-        self.country = country
-        self.provinceName = name
-        self.respect = 100
+from country import *
 
 class City(Province):
     
@@ -25,11 +6,11 @@ class City(Province):
         self.province = province
         self.cityName = name
 
-        self.respect = 100
         self.people = 20
         self.materials = { "wood": 20, "stone": 20, "iron": 20 }
         self.foodProcessed = { "grain": 0, "flour": 0, "hop": 0 }
         self.food = { "apple": 20, "fish": 20, "chees": 20, "bread": 20 }
+        self.foodEatingBlock = { "apple": False, "fish": False, "chees": False, "bread": False }
         self.weapon = { "spear": 0, "arch": 0, "crossbow": 0, "sword": 0, "plate_armor": 0 }
         self.entertainment = { "beer": 20 }
 
@@ -81,26 +62,26 @@ class City(Province):
             },
             "military": { 
                 "barraks": 0,
-                "engineers_guild": 0
-            },
-            "defense": {
-                "wood_defense": { 
-                    "palisade": 0, 
-                    "small_wood_tower": 0, 
-                    "big_wood_tower": 0, 
-                    "small_wood_gate": 0,
-                    "big_wood_gate": 0
-                },
-                "stone_defense": {
-                    "wall": 0,
-                    "medium_stone_tower": 0,
-                    "big_stone_tower": 0,
-                    "small_stone_gate": 0,
-                    "big_stone_gate": 0
-                },
-                "other": {
-                    "moat": 0,
-                    "barricade": 0
+                "engineers_guild": 0,
+                "defense": {
+                    "wood_defense": { 
+                        "palisade": 0, 
+                        "small_wood_tower": 0, 
+                        "big_wood_tower": 0, 
+                        "small_wood_gate": 0,
+                        "big_wood_gate": 0
+                    },
+                    "stone_defense": {
+                        "wall": 0,
+                        "medium_stone_tower": 0,
+                        "big_stone_tower": 0,
+                        "small_stone_gate": 0,
+                        "big_stone_gate": 0
+                    },
+                    "other": {
+                        "moat": 0,
+                        "barricade": 0
+                    }
                 }
             }
         }
@@ -118,42 +99,51 @@ class City(Province):
         self.foodProcessingWorkers = 0
         self.workshopWorkers = 0
 
-    def taxes(self):
+    def collectTaxes(self):
         self.province.country.player.gold += self.people * self.taxesLevel
-        self.respect -= self.taxesLevel
+        self.province.respect -= self.taxesLevel
 
     def foodRations(self):
-        eat = self.people * self.foodRationsLevel
-        foodValueSum = 0
-        for type, value in self.food:
-            if value > 0 and value >= eat:
-                value -= eat
-                self.respect += self.foodRationsLevel
-                break
-            else:
-                foodValueSum += value
-                if foodValueSum > 0 and foodValueSum > eat:
-                    foodValueSum -= eat
-                    self.respect += self.foodRationsLevel
-                    value += foodValueSum
-                    break
-                else:
-                    value = 0
-        if foodValueSum == 0 or self.foodRationsLevel == 0:
-            self.respect -= 16
+        hungryPeople = self.people * self.foodRationsLevel
+        if self.foodRationsLevel == 0:
+            self.province.respect -= 16
+        else:
+            for foodType, foodValue in self.food.items():
+                if self.foodEatingBlock[foodType] == False:
+                    hungryPeople -= self.food[foodType]
+                    if hungryPeople <= 0:
+                        self.food[foodType] = int( -hungryPeople )
+                        if self.province.respect + self.foodRationsLevel > 100:
+                            self.province.respect = 100
+                        else:
+                            self.province.respect += self.foodRationsLevel * 4      # all be fine
+                        break
+                    if hungryPeople > 0:
+                        self.food[foodType] = 0
+
+            if hungryPeople > 0:
+                self.province.respect -= 16                                         # with food something wrong
+            elif self.foodRationsLevel > 0 and self.foodRationsLevel < 1:
+                self.province.respect -= int(16 * ( 1 - self.foodRationsLevel ))
+                
 
     def peopleSatisfaction(self):
         consumption = self.people * self.peopleConsumptionLevel
         inns = self.buildings["food_processing"]["inn"]
-        for type, value in self.entertainment:
-            if type == "beer":
-                consumption *= inns 
-            if value > 0 and value >= consumption:
-                self.respect += value / consumption
-                value -= consumption
-            else:
-                self.respect += value / consumption
-                value = 0
+        if consumption != 0 and inns != 0:
+            for EntType, EntValue in self.entertainment.items():
+                if EntType == "beer":
+                    consumption *= inns 
+                if EntValue > 0 and EntValue >= consumption:
+                    self.province.respect += (EntValue / consumption) * 5
+                    if self.province.respect > 100:
+                        self.province.respect = 100
+                    self.entertainment[EntType] -= consumption
+                else:
+                    self.province.respect += (EntValue / consumption) * 5
+                    if self.province.respect > 100:
+                        self.province.respect = 100
+                    self.entertainment[EntType] = 0
 
     # def generalProduction(self):
     #     for buildType, buildings in self.buildings:
@@ -181,4 +171,3 @@ class City(Province):
 
     # def workProduction(self):
     #     for build, buildCount in self.buildings["workshops"]:
-
