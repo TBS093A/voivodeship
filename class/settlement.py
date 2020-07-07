@@ -15,7 +15,7 @@ class City(Province):
         self.weapon = { "spear": 0, "arch": 0, "crossbow": 0, "sword": 0, "plate_armor": 0 }
         self.entertainment = { "beer": 20 }
 
-        self.buildings = BuildFactory()
+        self.buildings = SettlementBuilder()
 
         # level of social
 
