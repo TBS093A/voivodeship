@@ -1,4 +1,5 @@
 from country import *
+from build import *
 
 class City(Province):
     
@@ -14,77 +15,7 @@ class City(Province):
         self.weapon = { "spear": 0, "arch": 0, "crossbow": 0, "sword": 0, "plate_armor": 0 }
         self.entertainment = { "beer": 20 }
 
-        self.buildings = {
-            "general": { 
-                "keep": 1,
-                "market": 0, 
-                "warehouse": 0, 
-                "granary": 0, 
-                "armory": 0 
-            },
-            "mine_raw_materials": { 
-                "sawmill": 0,
-                "stone_mine": 0,   
-                "iron_mine": 0
-            },
-            "agriculture": { 
-                "apple_orchard": 0,
-                "fisherman": 0,
-                "cow_farm": 0,
-                "grain_farm": 0, 
-                "hop_plantation": 0 
-            },
-            "food_processing": {
-                "mill": 0,
-                "barkery": 0,
-                "brawery": 0,
-                "inn": 0
-            },
-            "workshops": { 
-                "archery": 0, 
-                "spearman": 0, 
-                "crossbow": 0, 
-                "forge": 0, 
-                "armorer": 0 
-            },
-            "people": {
-                "small_houses": 0,
-                "medium_houses": 0,
-                "big_houses": 0,
-                # christian
-                "church": 0,        # on small settlement
-                "cathedral": 0,     # on cities
-                "basilica": 0,      # on province (city + settlements)
-                # slavic
-                "mound": 0,         # on small settlement
-                "peace_mound": 0,   # on cities
-                "war_mound": 0      # on province (city + settlements)
-            },
-            "military": { 
-                "barraks": 0,
-                "engineers_guild": 0,
-                "defense": {
-                    "wood_defense": { 
-                        "palisade": 0, 
-                        "small_wood_tower": 0, 
-                        "big_wood_tower": 0, 
-                        "small_wood_gate": 0,
-                        "big_wood_gate": 0
-                    },
-                    "stone_defense": {
-                        "wall": 0,
-                        "medium_stone_tower": 0,
-                        "big_stone_tower": 0,
-                        "small_stone_gate": 0,
-                        "big_stone_gate": 0
-                    },
-                    "other": {
-                        "moat": 0,
-                        "barricade": 0
-                    }
-                }
-            }
-        }
+        self.buildings = BuildFactory()
 
         # level of social
 
