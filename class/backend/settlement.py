@@ -1,7 +1,7 @@
-from country import *
-from build import *
+from .country import *
+from .build import *
 
-class City(Province):
+class City():
     
     def __init__(self, name, province):
         self.province = province
@@ -110,3 +110,9 @@ class City(Province):
 
     # def workProduction(self):
     #     for build, buildCount in self.buildings["workshops"]:
+
+class Village():
+
+    def __init__(self, name, city):
+        self.city = city
+        self.name = name
