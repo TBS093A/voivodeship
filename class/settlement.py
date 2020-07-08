@@ -65,6 +65,7 @@ class City(Province):
     #                     need 3  beer's for +10 respect
     #                     need 2  beer's for +5  respect
     #                     need 1  beer   for +2  respect 
+    
     def peopleSatisfaction(self):
         consumption = self.people * self.peopleConsumptionLevel
         inns = self.buildings.count_builds_by_name('inn')
