@@ -10,7 +10,7 @@ class TestCity(unittest.TestCase):
     countryTest = Country("countryTest", playerTest)
     provinceTest = Province("provinceTest", countryTest)
 
-# TAXES TEST
+class TestCityTaxes(TestCity):
 
     def test_city_taxes_zero(self):
         cityTest = City("cityTest", self.provinceTest)
@@ -62,7 +62,7 @@ class TestCity(unittest.TestCase):
         self.assertEqual(self.provinceTest.respect, 100 - cityTest.taxesLevel)
         self.assertEqual(self.playerTest.gold, cityTest.people * cityTest.taxesLevel)
 
-# FOOD RATIONS TEST
+class TestCityFoodRations(TestCity):
 
     def test_foodRations_zero(self):
         cityTest = City("cityTest", self.provinceTest)
@@ -178,14 +178,13 @@ class TestCity(unittest.TestCase):
         self.assertEqual(self.provinceTest.respect, 92)
         self.assertEqual(cityTest.food, { "apple": 0, "fish": 0, "chees": 25, "bread": 0 })
 
-# PEOPLE SATISFACTION TEST
+class TestCityPeopleSatisfaction(TestCity):
 
     def test_peopleSatisfaction_full_respect_zero(self):
         cityTest = City("cityTest", self.provinceTest)
         self.provinceTest.respect = 100
         cityTest.people = 100
         cityTest.peopleConsumptionLevel = 0
-        cityTest.buildings['food_processing']['inn'] = 0
         cityTest.entertainment = { "beer": 20 }
         cityTest.peopleSatisfaction()
         self.assertEqual(self.provinceTest.respect, 100)
@@ -196,7 +195,6 @@ class TestCity(unittest.TestCase):
         self.provinceTest.respect = 100
         cityTest.people = 100
         cityTest.peopleConsumptionLevel = 1
-        cityTest.buildings['food_processing']['inn'] = 0
         cityTest.entertainment = { "beer": 20 }
         cityTest.peopleSatisfaction()
         self.assertEqual(self.provinceTest.respect, 100)
@@ -207,7 +205,7 @@ class TestCity(unittest.TestCase):
         self.provinceTest.respect = 100
         cityTest.people = 100
         cityTest.peopleConsumptionLevel = 1
-        cityTest.buildings['food_processing']['inn'] = 1
+        cityTest.buildings.build((0,0), 'inn')
         cityTest.entertainment = { "beer": 20 }
         cityTest.peopleSatisfaction()
         self.assertEqual(self.provinceTest.respect, 100)
@@ -218,7 +216,8 @@ class TestCity(unittest.TestCase):
         self.provinceTest.respect = 50
         cityTest.people = 100
         cityTest.peopleConsumptionLevel = 1
-        cityTest.buildings['food_processing']['inn'] = 2
+        cityTest.buildings.build((0,0), 'inn')
+        cityTest.buildings.build((0,1), 'inn')
         cityTest.entertainment = { "beer": 20 }
         cityTest.peopleSatisfaction()
         self.assertEqual(self.provinceTest.respect, 50.5)
@@ -229,7 +228,8 @@ class TestCity(unittest.TestCase):
         self.provinceTest.respect = 50
         cityTest.people = 100
         cityTest.peopleConsumptionLevel = 1
-        cityTest.buildings['food_processing']['inn'] = 2
+        cityTest.buildings.build((0,0), 'inn')
+        cityTest.buildings.build((0,1), 'inn')
         cityTest.entertainment = { "beer": 400 }
         cityTest.peopleSatisfaction()
         self.assertEqual(self.provinceTest.respect, 60)

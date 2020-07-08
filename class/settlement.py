@@ -15,6 +15,8 @@ class City(Province):
         self.weapon = { "spear": 0, "arch": 0, "crossbow": 0, "sword": 0, "plate_armor": 0 }
         self.entertainment = { "beer": 20 }
 
+        # builder
+
         self.buildings = SettlementBuilder()
 
         # level of social
@@ -57,10 +59,11 @@ class City(Province):
             elif self.foodRationsLevel > 0 and self.foodRationsLevel < 1:
                 self.province.respect -= int(16 * ( 1 - self.foodRationsLevel ))
                 
+    # TODO upgrade people satisfaction
 
     def peopleSatisfaction(self):
         consumption = self.people * self.peopleConsumptionLevel
-        inns = self.buildings["food_processing"]["inn"]
+        inns = self.buildings.count_builds_by_name('inn')
         if consumption != 0 and inns != 0:
             for EntType, EntValue in self.entertainment.items():
                 if EntType == "beer":

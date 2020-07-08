@@ -30,8 +30,8 @@ BUILD_TYPES = [
 class BuildType():
 
     def __init__(self, name, texture):
-        self.name
-        self.texture
+        self.name = name
+        self.texture = texture
     pass
 
     def draw(self, canvas, position):
@@ -45,6 +45,10 @@ class BuildFactory():
         for buildType in self.buildTypes:
             if buildType.name == name:
                 return buildType
+
+# one instance for many objects reference
+
+BUILD_FACTORY = BuildFactory()
 
 # repeated values
 
@@ -69,15 +73,21 @@ class Build():
 
 class SettlementBuilder():
 
-    buildings = []
-
     def __init__(self):     # default -> create one keep
-        pass
+        self.buildings = []
+        self.build_factory = BUILD_FACTORY
 
     # builds methods
 
+    def count_builds_by_name(self, name) -> int:
+        count = 0
+        for build in self.buildings:
+            if build.build_type.name == name:
+                count += 1
+        return count
+
     def build(self, position, name) -> Build:
-        buildType = BuildFactory[name]
+        buildType = self.build_factory[name]
         build = Build(position, buildType)
         self.buildings.append(build)
         return build
