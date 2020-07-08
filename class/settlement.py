@@ -60,7 +60,11 @@ class City(Province):
                 self.province.respect -= int(16 * ( 1 - self.foodRationsLevel ))
                 
     # TODO upgrade people satisfaction
-
+    # 1 inn per 50 people need 10 beer's for +20 respect
+    #                     need 5  beer's for +15 respect
+    #                     need 3  beer's for +10 respect
+    #                     need 2  beer's for +5  respect
+    #                     need 1  beer   for +2  respect 
     def peopleSatisfaction(self):
         consumption = self.people * self.peopleConsumptionLevel
         inns = self.buildings.count_builds_by_name('inn')
