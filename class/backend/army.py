@@ -1,25 +1,27 @@
-from country import *
+from .country import *
 
 class Army():
 
-    voivodes = []
-
     def __init__(self, country):
         self.country = country
+        self.voivodes = []
 
 
 class Voivode():
-    
-    units = []
-    economy_skills = {}
-    warfare_skills = {}
-    morale = 100
-    level = 1
-    experience = 0
 
-    def __init__(self, name, army):
-        self.army = army
+    def __init__(self, name, army, province):
         self.name = name
+        
+        self.army = army
+        self.province = province
+
+        self.morale = 100
+        self.level = 1
+        self.experience = 0
+        
+        self.economy_skills = {}
+        self.warfare_skills = {}
+        self.units = []
 
     def append_unit(self, unit):        # append unit
         self.units.append(unit)
